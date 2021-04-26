@@ -20,7 +20,12 @@
 #include "freertos/queue.h"
 #include "esp_err.h"
 #include "esp_spi_flash.h"
+#include "esp_wifi.h"
+// #include "esp_wpa2.h"
 
+
+#define TRUE 1
+#define FALSE 0
 
 static xQueueHandle gpio_evt_queue = NULL;
 
@@ -37,9 +42,6 @@ static xQueueHandle gpio_evt_queue = NULL;
 #define GPIO_INPUT_INT_BUTTON (0)
 
 
-
-
-
 /*
 *    TASKS
 */ 
@@ -51,8 +53,6 @@ static void IRAM_ATTR gpio_isr_handler(void* arg)
     uint32_t gpio_num = (uint32_t) arg;
     xQueueSendFromISR(gpio_evt_queue, &gpio_num, NULL);
 }
-
-
 
 
 /*
@@ -170,24 +170,24 @@ void app_main(void){
     */ 
 
 
-    int T=1;   // SELECT TASK TO EXECUTE
+    //int T=1;   // SELECT TASK TO EXECUTE
 
     //  vTaskStartScheduler();
     
-    if (T==1){
-        xTaskCreate(getAccelerometer, "getAcc", 4*1024, NULL, 1, NULL );
+    if (TRUE){
+        xTaskCreate(getAccelerometer, "getAcc", STACK_SIZE, NULL, 1, NULL );
     }
-    if (T==1){
+    if (TRUE){
         xTaskCreate(accelerometer_interrupt, "accelerometer_interrupt", 2048, NULL, 10, NULL);
     }
-    if (T==0){
-        xTaskCreate(demoColors_01,"Change Colors 01",4*1024, NULL, 5, &xDemo01Handle);
-        xTaskCreate(demoColors_02,"Change Colors 02",4*1024, NULL, 5, &xDemo02Handle);
+    if (FALSE){
+        xTaskCreate(demoColors_01,"Change Colors 01",STACK_SIZE, NULL, 5, &xDemo01Handle);
+        xTaskCreate(demoColors_02,"Change Colors 02",STACK_SIZE, NULL, 5, &xDemo02Handle);
         vTaskSuspend( xDemo02Handle );
     }
 
-    if (T==1){
-        xTaskCreate(demoColors_03,"Change Colors 03",4*1024, NULL, 5, &xDemo03Handle);
+    if (TRUE){
+        xTaskCreate(demoColors_03,"Change Colors 03",STACK_SIZE, NULL, 5, &xDemo03Handle);
     }
 
 // return 0;
