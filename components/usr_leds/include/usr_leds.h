@@ -19,6 +19,19 @@
 #ifndef __USR_LEDS__
 #define __USR_LEDS__
 
+#include <stdio.h>
+#include <stdlib.h>
+#include "esp_sleep.h"
+#include "sdkconfig.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+#include "esp_system.h"
+#include "driver/ledc.h"
+#include "driver/gpio.h"
+#include "driver/i2c.h"
+#include "freertos/queue.h"
+#include "esp_err.h"
+// #include "esp_spi_flash.h"
 
 #define LED_R1       (17)
 #define LED_G1       (18)

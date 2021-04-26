@@ -34,15 +34,15 @@
 #include "esp_wifi.h"
 // #include "esp_wpa2.h"
 
-
 #define TRUE 1
 #define FALSE 0
 
 static xQueueHandle gpio_evt_queue = NULL;
 
 // USER LIBS
-#include "usr_leds.h"
-#include "usr_ADXL343_I2C.h"
+
+//#include "usr_leds.h"
+//#include "usr_ADXL343_I2C.h"
 
 #define ESP_INTR_FLAG_DEFAULT 0
 

@@ -16,7 +16,24 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include "usr_leds.h"
+#ifndef __USR_ADXL343_I2C__
+#define __USR_ADXL343_I2C__
+
+//#include "usr_leds.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include "esp_sleep.h"
+#include "sdkconfig.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+#include "esp_system.h"
+#include "driver/ledc.h"
+#include "driver/gpio.h"
+#include "driver/i2c.h"
+#include "freertos/queue.h"
+#include "esp_err.h"
+#include "esp_spi_flash.h"
+
 
 #define GPIO_INPUT_INT_1 (23)
 #define GPIO_INPUT_INT_2 (22)
@@ -75,3 +92,4 @@ force acc2;
 
 uint8_t state_machine_position = 0;
 
+#endif

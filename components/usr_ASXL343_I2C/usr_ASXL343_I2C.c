@@ -1,3 +1,12 @@
+//#include <stdio.h>
+//#include "usr_ASXL343_I2C.h"
+
+//void func(void)
+//{
+
+// }
+
+
  /* Copyright (C) - Jairo Esrefanía <cerverros@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -17,8 +26,7 @@
  */
 
 
-#ifndef __USR_ADXL343_I2C__
-#define __USR_ADXL343_I2C__
+
 
 #include "usr_ADXL343_I2C.h"
 
@@ -412,4 +420,4 @@ void getAccelerometer(void *pvParameters)
 } //end task
 
 
-#endif
+
