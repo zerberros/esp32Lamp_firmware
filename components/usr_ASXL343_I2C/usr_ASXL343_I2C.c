@@ -26,16 +26,32 @@
  */
 
 
+#include <stdio.h>
+#include <stdlib.h>
+#include "esp_sleep.h"
+#include "sdkconfig.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+#include "esp_system.h"
+#include "driver/ledc.h"
+#include "driver/gpio.h"
+#include "driver/i2c.h"
+#include "freertos/queue.h"
+#include "esp_err.h"
+//#include "esp_spi_flash.h"
+
+#include "usr_leds.h"
+#include "usr_ASXL343_I2C.h"
 
 
-#include "usr_ADXL343_I2C.h"
-
+uint8_t state_machine_position = 0;
+xQueueHandle gpio_evt_queue = NULL;
 
 /*
 *    FUNCIONES DE INICIALIZACIÓN I2C
 */ 
 
-static esp_err_t i2c_master_driver_initialize(void)
+esp_err_t i2c_master_driver_initialize(void)
 {
     i2c_config_t conf_i2c = {
         .mode = I2C_MODE_MASTER,
@@ -52,7 +68,7 @@ static esp_err_t i2c_master_driver_initialize(void)
 *   FIN DE FUNCIONES DE INICIALIZACIÓN I2C
 */ 
 
-static void accelerometer_interrupt(void* arg)
+void accelerometer_interrupt(void* arg)
 {
     uint32_t io_num;
     for(;;) {
