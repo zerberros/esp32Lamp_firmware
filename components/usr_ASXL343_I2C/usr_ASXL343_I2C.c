@@ -28,6 +28,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "esp_log.h"
 #include "esp_sleep.h"
 #include "sdkconfig.h"
 #include "freertos/FreeRTOS.h"
@@ -42,7 +43,7 @@
 
 #include "usr_leds.h"
 #include "usr_ASXL343_I2C.h"
-
+static const char* TAG_ASCL343 = "usr_ASCL343";
 
 uint8_t state_machine_position = 0;
 xQueueHandle gpio_evt_queue = NULL;
@@ -73,7 +74,8 @@ void accelerometer_interrupt(void* arg)
     uint32_t io_num;
     for(;;) {
         if(xQueueReceive(gpio_evt_queue, &io_num, portMAX_DELAY)) {
-            printf("GPIO[%d] intr, val: %d\n", io_num, gpio_get_level(io_num));
+            ESP_LOGD(TAG_ASCL343, "GPIO[%d] intr, val: %d\n", io_num, gpio_get_level(io_num));
+            // printf("GPIO[%d] intr, val: %d\n", io_num, gpio_get_level(io_num));
             if(io_num ==0 && gpio_get_level(io_num)==1){
 
                 state_machine_position +=1;
@@ -91,7 +93,8 @@ int med;
                     luminosity_bk.T = (luminosity.R + luminosity.G + luminosity.B)/3;
                     luminosity.T = luminosity_bk.T;
                     vTaskResume( xDemo03Handle );
-                    printf("Demo colors");
+                    ESP_LOGD(TAG_ASCL343, "Demo colors\n");
+                    // printf("Demo colors");
                     break;
                 case 1:
                     //vTaskSuspend( xDemo01Handle );
@@ -105,7 +108,8 @@ int med;
                     luminosity.G = luminosity_bk.T;
                     luminosity.B = luminosity_bk.T;
                     set_led_RGB();
-                    printf("White colors");
+                    ESP_LOGD(TAG_ASCL343, "White colors\n");
+                    // printf("White colors");
                     break;
                 case 2:
                     // Red color
@@ -117,7 +121,8 @@ int med;
                     luminosity.G = 0;
                     luminosity.B = 0;
                     set_led_RGB();
-                    printf("RED color");
+                    ESP_LOGD(TAG_ASCL343, "Red colors\n");
+                    // printf("RED color");
                     break;
                 case 3:
                     // Green color
@@ -126,7 +131,8 @@ int med;
                     luminosity.G = luminosity_bk.G;
                     luminosity.B = 0;
                     set_led_RGB();
-                    printf("Green color");
+                    ESP_LOGD(TAG_ASCL343, "Green colors\n");
+                    // printf("Green color");
                     break;
                 case 4:
                     // Blue color
@@ -135,7 +141,8 @@ int med;
                     luminosity.G = 0;
                     luminosity.B = luminosity_bk.B;
                     set_led_RGB();
-                    printf("Blue color");
+                    ESP_LOGD(TAG_ASCL343, "Blue colors\n");
+                    // printf("Blue color");
                     break;
                 case 5:
                     // RGB color
@@ -145,18 +152,20 @@ int med;
                     luminosity.B = luminosity_bk.B;
                                        
                     set_led_RGB();
-                    printf("Blue color");
+                    ESP_LOGD(TAG_ASCL343, "RGB color\n");
+                    // printf("Blue color");
                     break;
             default:
                     // default statements
-                    printf("fak");
+                    ESP_LOGE(TAG_ASCL343, "Estate machine error case.\n");
+                    // printf("fak");
                     //break;
             
             }  // end switch case
         
 
-
-            printf("State machine position == %d \n", state_machine_position);
+            ESP_LOGD(TAG_ASCL343, "State machine position == %d \n", state_machine_position);
+            // printf("State machine position == %d \n", state_machine_position);
             } // end if
         }  // end if
     vTaskDelay(100 / portTICK_PERIOD_MS );
@@ -242,16 +251,20 @@ uint8_t read_ADXL343(uint8_t address, uint8_t register1, uint8_t len){
 	// printf("write_add = 0x%02x \n", (dev_address<<1) | WRITE_BIT);
 	// printf("read_add = 0x%02x \n", (dev_address<<1) | READ_BIT);
 	if(ret == ESP_ERR_TIMEOUT){
-	    printf("BUS IS BUSY \n");
+        ESP_LOGE(TAG_ASCL343, "BUS IS BUSY \n");
+	    // printf("BUS IS BUSY \n");
 	    }
 	// printf("ret: %i \n", ret);
 	
 	for (int i = 0; i < len; i++) {
-        printf("0x%02x ;", data[i]);
+        ESP_LOGD(TAG_ASCL343, "0x%02x \n;", data[i]);
+        // printf("0x%02x ;", data[i]);
 
-        printf("int: %i \n", data[i]);
+        ESP_LOGD(TAG_ASCL343, "int: %i \n", data[i]);
+        // printf("int: %i \n", data[i]);
         if ((i + 1) % 6 == 0) {
-            printf("\r\n");
+            ESP_LOGD(" ", "\r\n");
+            // printf("\r\n");
         }  //endif
     }  // endfor
     
@@ -302,11 +315,14 @@ void getAccelerometer(void *pvParameters)
     // printf("X1 :: X0 -> 0x%02X :: 0x%02X\n", acc2.FX1, acc2.FX0);
     // printf("Y1 :: Y0 -> 0x%02X :: 0x%02X\n", acc2.FY1, acc2.FY0);
     // printf("Z1 :: Z0 -> 0x%02X :: 0x%02X\n", acc2.FZ1, acc2.FZ0);
-    printf("DATAX:  0x%02x OR %i; \n", acc.FX, acc.FX);
+    ESP_LOGD(TAG_ASCL343, "DATAX:  0x%02x OR %i; \n", acc.FX, acc.FX);
+    // printf("DATAX:  0x%02x OR %i; \n", acc.FX, acc.FX);
     //printf("DATAX1:  0x%02x OR %d; \n", acc.X1, acc.X1);
-    printf("DATAY:  0x%02x OR %i; \n", acc.FY, acc.FY);
+    ESP_LOGD(TAG_ASCL343, "DATAY:  0x%02x OR %i; \n", acc.FY, acc.FY);
+    // printf("DATAY:  0x%02x OR %i; \n", acc.FY, acc.FY);
     //printf("DATAY1:  0x%02x OR %d; \n", acc.Y1, acc.Y1);
-    printf("DATAZ:  0x%02x OR %i; \n\n", acc.FZ, acc.FZ);
+    ESP_LOGD(TAG_ASCL343, "DATAZ:  0x%02x OR %i; \n\n", acc.FZ, acc.FZ);
+    // printf("DATAZ:  0x%02x OR %i; \n\n", acc.FZ, acc.FZ);
     //printf("DATAZ1:  0x%02x OR %d; \n", acc.Z1, acc.Z1);
     
     if (acc.FY < threshold_low){

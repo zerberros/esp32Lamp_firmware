@@ -20,6 +20,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "esp_log.h"
 #include "esp_sleep.h"
 #include "sdkconfig.h"
 #include "freertos/FreeRTOS.h"
@@ -32,8 +33,9 @@
 #include "esp_err.h"
 #include "esp_spi_flash.h"
 #include "esp_wifi.h"
-// #include "esp_wpa2.h"
 
+// #include "esp_wpa2.h"
+static const char* TAG = "espLamp_main";
 
 #define TRUE 1
 #define FALSE 0
@@ -73,6 +75,9 @@ static void IRAM_ATTR gpio_isr_handler(void* arg)
 
 void app_main(void){
     
+
+    ESP_LOGI(TAG, "Hola app_main\n");
+
     #ifdef INFO
 
     /*

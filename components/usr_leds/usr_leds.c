@@ -19,6 +19,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "esp_log.h"
 #include "esp_sleep.h"
 #include "sdkconfig.h"
 #include "freertos/FreeRTOS.h"
@@ -31,7 +32,7 @@
 #include "esp_err.h"
 // #include "esp_spi_flash.h"
 #include "usr_leds.h"
-
+// static const char* TAG_leds = "usr_leds";
 
 int16_t threshold_high = 256;
 int16_t threshold_low = -25;
